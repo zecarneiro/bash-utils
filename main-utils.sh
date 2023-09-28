@@ -1,25 +1,29 @@
 #!/bin/bash
-# Autor: José M. C. Noronha
+# Author: José M. C. Noronha
+# shellcheck source=/dev/null
 # shellcheck disable=SC2155
 # shellcheck disable=SC2116
 
-# Global Variable
-declare AUTHOR="Author: José M. C. Noronha"
+# Get Script directory
 declare SCRIPT_UTILS_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+
+# ---------------------------------------------------------------------------- #
+#                                    IMPORTS                                   #
+# ---------------------------------------------------------------------------- #
+source "${SCRIPT_UTILS_DIR}/others/bash-profile/bash-profile-custom.sh"
+for script in "${SCRIPT_UTILS_DIR}"/src/*.sh; do
+	source "$script"
+done
+
+# ---------------------------------------------------------------------------- #
+#                                   VARIABLE                                   #
+# ---------------------------------------------------------------------------- #
 declare TEMP_DIR=$(mktemp -d)
 declare HOME_DIR="$(echo "$HOME")"
 declare OTHER_APPS_DIR="$HOME_DIR/otherapps"
 declare CONFIG_DIR="$HOME_DIR/.config"
 declare APPS_DIR="${TEMP_DIR}/apps"
 declare APPS_BIN_DIR="$APPS_DIR/bin"
-
-# ---------------------------------------------------------------------------- #
-#                                    IMPORTS                                   #
-# ---------------------------------------------------------------------------- #
-for script in "${SCRIPT_UTILS_DIR}"/src/*.sh; do
-	# shellcheck source=/dev/null
-	source "$script"
-done
 
 # ---------------------------------------------------------------------------- #
 #                                  OPERATIONS                                  #
@@ -35,7 +39,7 @@ function create_dirs {
 	)
 	for dir in "${dirs[@]}"; do
 		if [[ ! -d "${dir}" ]]; then
-			mkdir -p "${dir}"
+			mkdir "${dir}"
 		fi
 	done
 }

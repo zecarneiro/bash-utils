@@ -1,5 +1,5 @@
 #!/bin/bash
-# Autor: José M. C. Noronha
+# Author: José M. C. Noronha
 # shellcheck disable=SC2164
 # shellcheck disable=SC2155
 # shellcheck disable=SC2162
@@ -26,21 +26,5 @@ function wait_for_any_key_pressed {
         message="Press any key to continue"
     fi
     read -n 1 -s -r -p "$message"
-    log_log ""
-}
-
-function eval_custom {
-    local expression="$1"
-    prompt_log "$expression"
-    eval "$expression"
-}
-
-function command_exist {
-    local command="$1"
-    if [ "$(command -v "$command")" ]; then
-        true
-        return
-    fi
-    false
-    return
+    log ""
 }

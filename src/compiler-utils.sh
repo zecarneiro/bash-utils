@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author: José M. C. Noronha
 
 function compile {
     local cmd="$1"
@@ -6,6 +7,6 @@ function compile {
     local currentDir="$(echo "$PWD")"
     info_log "Compiling..."
     cd "$cwd"
-    eval_custom "$cmd"
+    evaladvanced "$cmd"
     cd "$currentDir"
 }

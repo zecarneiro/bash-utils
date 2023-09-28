@@ -1,5 +1,5 @@
 #!/bin/bash
-# Autor: José M. C. Noronha
+# Author: José M. C. Noronha
 # shellcheck disable=SC2155
 # shellcheck disable=SC2164
 # shellcheck disable=SC2005
@@ -7,107 +7,13 @@
 # ---------------------------------------------------------------------------- #
 #                                   FUNCTIONS                                  #
 # ---------------------------------------------------------------------------- #
-function dirname_custom {
-    local file="$1"
-    log_log "$(dirname "$file")"
-}
-
-function basename_custom {
-    local file="$1"
-    log_log "$(basename "$file")"
-}
-
-function get_working_dir {
-    log_log "$(pwd)"
-}
-
-function is_directory {
-    local file="$1"
-    if [[ -d "$file" ]]; then
-        true
-        return
-    fi
-    false
-    return
-}
-
-function file_delete {
-    local file="$1"
-    if file_exist "${file}"; then
-        if is_directory "${file}"; then
-            eval_custom "rm -rf \"${file}\""
-        else
-            eval_custom "rm \"${file}\""
-        fi
-    else
-        warnning_log "File not exist: ${file}"
-    fi
-}
-
-function create_directory {
-    local file="$1"
-    if ! is_directory "${file}"; then
-        eval_custom "mkdir -p \"${file}\""
-    fi
-}
-
-function write_file {
-    local file append data
-    # shellcheck disable=SC2214
-    local opt OPTARG OPTIND
-    while getopts 'f:a:d' opt; do
-        case "${opt}" in
-        f) file=${OPTARG} ;;
-        a) append=${OPTARG} ;;
-        d) data=${OPTARG} ;;
-        *) ;;
-        esac
-    done
-    if [[ "$append" -eq 1 ]]; then
-        echo "$data" | tee -a "$file" >/dev/null
-    else
-        echo "$data" >"$file"
-    fi
-}
-
-function file_exist {
-    local file="$1"
-    if is_directory "${file}" || [ -f "${file}" ]; then
-        true
-        return
-    fi
-    false
-    return
-}
-
-function download {
-    local uri outfile
-    # shellcheck disable=SC2214
-    local opt OPTARG OPTIND
-    while getopts 'u:o:' opt; do
-        case "${opt}" in
-        u) uri=${OPTARG} ;;
-        o) outfile=${OPTARG} ;;
-        *) return 1 ;;
-        esac
-    done
-    if has_internet_connection; then
-        if ! command_exist "wget"; then
-            eval_custom "sudo apt install wget -y"
-        fi
-        wget -O "$outfile" "$uri" -q --show-progress
-    else
-        error_log "No Internet connection available"
-    fi
-}
-
 function svg_to_png {
     local svg_file="$1"
     local png_file="$2"
-    if file_exist "$svg_file"; then
-        local png_dir="$(dirname_custom "$png_file")"
-        create_directory "$png_dir"
-        eval_custom "inkscape \"$svg_file\" -o \"$png_file\" --export-overwrite -w 32 -h 32"
+    if fileexists "$svg_file"; then
+        local png_dir="$(dirname "$png_file")"
+        mkdir "$png_dir"
+        eval "inkscape \"$svg_file\" -o \"$png_file\" --export-overwrite -w 32 -h 32"
     fi
 }
 
@@ -140,7 +46,7 @@ function define_default_system_dir {
             user_dirs[VIDEOS]="$result"
         fi
         for key in "${!user_dirs[@]}"; do
-            eval_custom "xdg-user-dirs-update --set $key \"${user_dirs[$key]}\""
+            evaladvanced "xdg-user-dirs-update --set $key \"${user_dirs[$key]}\""
         done
     fi
 }
