@@ -70,6 +70,7 @@ function install_php {
 
 function install_go {
     if [[ $(show_message_dev "Go") == "y" ]]; then
+        evaladvanced "sudo add-apt-repository ppa:longsleep/golang-backports -y"
         evaladvanced "sudo apt install golang-go -y"
     fi
 }
@@ -77,11 +78,8 @@ function install_go {
 function install_sqlite3 {
     if [[ $(show_message_dev "Sqlite3") == "y" ]]; then
         infolog "\nDownload link example: https://www.sqlite.org/2022/sqlite-autoconf-{version}.tar.gz"
-        download --url "https://www.sqlite.org/2022/sqlite-autoconf-3380200.tar.gz" --file "/tmp/sqlite-autoconf-3380200.tar.gz"
         evaladvanced "sudo apt install build-essential libsqlite3-dev -y"
-        evaladvanced "tar xvfz /tmp/sqlite-autoconf-3380200.tar.gz"
-        evaladvanced "sudo mv sqlite-autoconf-3380200 /opt/sqlite3"
-        evaladvanced "cd /opt/sqlite3 && ./configure --prefix=/usr && sudo make install && cd -"
+        evaladvanced "sudo apt install sqlite3 -y"
     fi
 }
 

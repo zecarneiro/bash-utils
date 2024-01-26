@@ -39,7 +39,7 @@ function create_dirs {
 	)
 	for dir in "${dirs[@]}"; do
 		if [[ ! -d "${dir}" ]]; then
-			mkdir "${dir}"
+			mkdir -p "${dir}"
 		fi
 	done
 }

@@ -10,7 +10,11 @@ shopt -s expand_aliases # Enable alias to use on bash script
 #                                    SYSTEM                                    #
 # ---------------------------------------------------------------------------- #
 function reboot {
-    read -p "Will be restart PC. Continue(y/N)? " userInput
+	local message="$1"
+	if [[ -z "${message}" ]]; then
+		message="Will be restart PC. Continue(y/N)? "
+	fi
+    read -p "$message" userInput
     if [[ "${userInput}" == "Y" ]] || [[ "${userInput}" == "y" ]]; then
 		sudo "$(which shutdown)" -r now
     fi
@@ -64,6 +68,25 @@ alias reloadprofile='source ~/.bashrc'
 alias ver='lsb_release -a'
 alias cls='clear'
 
+# -------------------------------- SYSTEM HELP ------------------------------- #
+function help-custom-profile-system {
+	log; headerlog "System"
+	log "reboot |MSG"
+	log "shutdown"
+	log "evaladvanced EXPRESSION"
+	log "commandexists COMMAND"
+	log "addalias --name NAME --command COMMAND"
+	log "isadmin"
+
+	log; separatorlog 15
+	log "editalias"
+	log "editprofile"
+	log "editcustomprofile"
+	log "reloadprofile"
+	log "ver"
+	log "cls"
+}
+
 
 # ---------------------------------------------------------------------------- #
 #                                   DIRECTORY                                  #
@@ -71,14 +94,14 @@ alias cls='clear'
 function gouserotherapps {
 	local directory="$HOME\otherapps"
     if [[ $(directoryexists "$directory") == true ]]; then
-        mkdir "$directory"
+        mkdir -p "$directory"
 	fi
-    cd "$directory" || mkdir "$directory"
+    cd "$directory" || mkdir -p "$directory"
 }
 function gouserconfig {
 	local directory="$HOME\.config"
     if [[ $(directoryexists "$directory") == true ]]; then
-        mkdir "$directory"
+        mkdir -p "$directory"
 	fi
     cd "$directory"
 }
@@ -109,13 +132,36 @@ alias deleteemptydirs="evaladvanced 'find . -empty -type d -delete -print'"
 alias gohome='cd $HOME'
 alias cd..='cd ..'
 alias ..='cd ..'
-alias cd...='d ../..'
+alias cd...='cd ../..'
 alias ...='cd ../..'
 alias cd....='cd ../../..'
 alias ....='cd ../../..'
 alias cd.....='cd ../../../..'
 alias .....='cd ../../../..'
-alias mkdir='mkdir -p'
+alias countdirs="find . -type d | wc -l"
+
+# ------------------------------ DIRECTORY HELP ------------------------------ #
+function help-custom-profile-directory {
+	log; headerlog "Directory"
+	log "gouserotherapps"
+	log "gouserconfig"
+	log "directoryexists DIRECTORY"
+	log "deletedirectory DIRECTORY"
+	log "ldir |CWD"
+
+	log; separatorlog 15
+	log "deleteemptydirs"
+	log "gohome"
+	log "cd.."
+	log ".."
+	log "cd..."
+	log "..."
+	log "cd...."
+	log "...."
+	log "cd....."
+	log "....."
+	log "countdirs"
+}
 
 
 # ---------------------------------------------------------------------------- #
@@ -169,14 +215,24 @@ function lf {
 # ----------------------------------- ALIAS ---------------------------------- #
 alias findfile="find . | grep "
 alias movefilestoparent="evaladvanced 'find . -mindepth 2 -type f -print -exec mv {} . \;'"
+alias countfiles="find . -type f | wc -l"
 
+# --------------------------------- FILE HELP -------------------------------- #
+function help-custom-profile-file {
+	log; headerlog "File"
+	log "fileexists FILE"
+	log "fileextension FILE"
+	log "filename FILE"
+	log "delfilelines FILE MATCH"
+	log "countfiles"
+	log "deletefile FILE"
+	log "lf |CWD"
 
-# ---------------------------------------------------------------------------- #
-#                             Secure Hash Algorithm                            #
-# ---------------------------------------------------------------------------- #
-alias sha1='openssl sha1'
-alias md5='openssl md5'
-alias sha256='openssl sha256'
+	log; separatorlog 15
+	log "findfile FILE"
+	log "movefilestoparent"
+	log "countfiles"
+}
 
 
 # ---------------------------------------------------------------------------- #
@@ -251,7 +307,6 @@ function execfilecommand {
 		done < "$file"
 	fi
 }
-
 function changedefaultjdk {
 	local java_default_script_name="/etc/profile.d/jdk-default.sh"
 	evaladvanced "update-java-alternatives --list"
@@ -262,10 +317,23 @@ function changedefaultjdk {
 	evaladvanced "source ${java_default_script_name}"
 }
 
-
 # ----------------------------------- ALIAS ---------------------------------- #
 alias cpadvanced='cp -Ri'
 alias mvadvanced='mv -i'
+
+# -------------------------------- TOOLS HELP -------------------------------- #
+function help-custom-profile-tools {
+	log; headerlog "Tools"
+	log "cutadvanced --direction L|R --delimiter DELIMITER --data DATA"
+	log "extract FILE"
+	log "\tValid format: tar|bz2|rar|gz|tbz2|tgz|zip|Z|7z"
+	log "execfilecommand FILE"
+	log "changedefaultjdk"
+
+	log; separatorlog 15
+	log "cpadvanced CP_ARGS"
+	log "mvadvanced MV_ARGS"
+}
 
 
 # ---------------------------------------------------------------------------- #
@@ -328,6 +396,16 @@ function freeport {
 	evaladvanced "sudo ss --kill state listening src ':$port'"
 }
 
+# ------------------------------ NETWORKING HELP ----------------------------- #
+function help-custom-profile-networking {
+	log; headerlog "Networking"
+	log "openurl URL"
+	log "hasinternet"
+	log "mypubip"
+	log "download --url URL --file FILE"
+	log "freeport PORT"
+}
+
 
 # ---------------------------------------------------------------------------- #
 #                                    LOGGER                                    #
@@ -370,7 +448,7 @@ function promptlog {
     local message="$1"
 	local DARKGRAY_COLOR='\033[1;30m'
 	declare BOLD_FOR_COLOR='\e[0m'
-    log "${DARKGRAY_COLOR}>>>${BOLD_FOR_COLOR}${NO_COLOR} ${message}"
+    log "${DARKGRAY_COLOR}>>>${BOLD_FOR_COLOR}${NO_COLOR} ${BOLD_FOR_COLOR}${message}${NO_COLOR}"
 }
 function titlelog {
 	local message="$1"
@@ -386,6 +464,34 @@ function titlelog {
 function headerlog {
 	local message="$1"
 	log "##  $message  ##"
+}
+function separatorlog {
+	local length=$1
+	local message="# "
+	if [[ -z "${length}" ]]||[[ $length -lt 5 ]]; then
+		length=6
+	fi
+	for (( i=1; i<=length-4; i++ )); do
+		message="${message}-"
+	done
+	message="$message #"
+	log "$message"
+}
+
+
+# -------------------------------- LOGGER HELP ------------------------------- #
+function help-custom-profile-logger {
+	log; headerlog "Logger"
+	log ">> ARG 2 - Is keep line (DEFAULT 0)"
+	log "log MESSAGE |1"
+	log "errorlog MESSAGE |1"
+	log "infolog MESSAGE |1"
+	log "warnlog MESSAGE |1"
+	log "oklog MESSAGE |1"
+	log "promptlog MESSAGE"
+	log "titlelog MESSAGE"
+	log "headerlog MESSAGE"
+	log "separatorlog |LENGTH (DEFAULT 6)"
 }
 
 
@@ -413,6 +519,18 @@ function gitresetfile() {
 alias gitrepobackup="git clone --mirror"
 alias gitreporestorebackup="git push --mirror"
 alias gitundolastcommit="evaladvanced 'git reset --soft HEAD~1'"
+
+# --------------------------------- GIT HELP --------------------------------- #
+function help-custom-profile-git {
+	log; headerlog "Git"
+	log "gitresethardorigin"
+	log "gitresetfile FILE_NAME BRANCH"
+
+	log; separatorlog 15
+	log "gitrepobackup GIT_CLONE_ARGS"
+	log "gitreporestorebackup GIT_PUSH_ARGS"
+	log "gitundolastcommit"
+}
 
 
 # ---------------------------------------------------------------------------- #
@@ -490,3 +608,54 @@ function debgetclean {
 # ----------------------------------- ALIAS ---------------------------------- #
 alias systemupgrade="npmupgrade; log; aptupgrade; log; flatpakupgrade; log; snapupgrade; log; debgetupgrade"
 alias systemclean="aptclean; log; flatpakclean; log; snapclean; log; debgetclean"
+
+# ---------------------------- PACKAGES UTILS HELP --------------------------- #
+function help-custom-profile-packages-utils {
+	log; headerlog "Packages Utils"
+	log "npmupgrade"
+	log "aptupgrade"
+	log "aptuninstall APP"
+	log "aptclean"
+	log "flatpakupgrade"
+	log "flatpakuninstall APP"
+	log "flatpakclean"
+	log "snapupgrade"
+	log "snapuninstall APP"
+	log "snapclean"
+	log "debgetupgrade"
+	log "debgetclean"
+
+	log; separatorlog 15
+	log "systemupgrade"
+	log "systemclean"
+}
+
+
+# ---------------------------------------------------------------------------- #
+#                             Secure Hash Algorithm                            #
+# ---------------------------------------------------------------------------- #
+alias sha1='openssl sha1'
+alias md5='openssl md5'
+alias sha256='openssl sha256'
+
+
+# ---------------------------------------------------------------------------- #
+#                                     HELP                                     #
+# ---------------------------------------------------------------------------- #
+function help-custom-profile {
+	titlelog "HELP of Custom Profile"
+	help-custom-profile-system
+	help-custom-profile-directory
+	help-custom-profile-file
+	help-custom-profile-tools
+	help-custom-profile-networking
+	help-custom-profile-logger
+	help-custom-profile-git
+	help-custom-profile-packages-utils
+
+	log; headerlog "Others"
+	log "sha1 OPEN_SSL_ARGS"
+	log "md5 OPEN_SSL_ARGS"
+	log "sha256 OPEN_SSL_ARGS"
+}
+
