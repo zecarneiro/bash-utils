@@ -56,10 +56,9 @@ function flatpakclean {
     evaladvanced 'flatpak uninstall --unused -y'
     evaladvanced 'sudo rm -rfv /var/tmp/flatpak-cache*'
 }
-# TODO : Falta concluir
 function flatpaklist {
     local filter="$1"
-    local command_to_run="apt list --installed"
+    local command_to_run="flatpak list"
     if [[ -n "${filter}" ]]; then
         command_to_run="${command_to_run} | grep ${filter}"
     fi
@@ -97,30 +96,9 @@ function snapclean {
         evaladvanced "sudo snap remove \"$snapname\" --revision=\"$revision\""
     done
 }
-# TODO : Falta concluir
-function flatpaklist {
+function snaplist {
     local filter="$1"
-    local command_to_run="apt list --installed"
-    if [[ -n "${filter}" ]]; then
-        command_to_run="${command_to_run} | grep ${filter}"
-    fi
-    evaladvanced "${command_to_run}"
-}
-
-# ---------------------------------------------------------------------------- #
-#                                    DEB-GET                                   #
-# ---------------------------------------------------------------------------- #
-function debgetupgrade {
-    evaladvanced 'sudo deb-get update --repos-only'
-    evaladvanced 'sudo deb-get upgrade'
-}
-function debgetclean {
-    evaladvanced 'sudo deb-get clean'
-}
-# TODO : Falta concluir
-function flatpaklist {
-    local filter="$1"
-    local command_to_run="apt list --installed"
+    local command_to_run="snap list"
     if [[ -n "${filter}" ]]; then
         command_to_run="${command_to_run} | grep ${filter}"
     fi

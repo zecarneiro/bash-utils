@@ -6,11 +6,14 @@
 
 # Get Script directory
 declare SCRIPT_UTILS_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+echo $SCRIPT_UTILS_DIR
 
 # ---------------------------------------------------------------------------- #
 #                                    IMPORTS                                   #
 # ---------------------------------------------------------------------------- #
-source "${SCRIPT_UTILS_DIR}/others/bash-profile/bash-profile-custom.sh"
+for script in "${SCRIPT_UTILS_DIR}"/others/profile-shell/*.sh; do
+	source "$script"
+done
 for script in "${SCRIPT_UTILS_DIR}"/src/*.sh; do
 	source "$script"
 done

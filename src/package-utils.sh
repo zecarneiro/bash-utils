@@ -19,6 +19,14 @@ function install_all_packages() {
     install_installers
 }
 
+function install_all_base_packages() {
+    install_base_apt_package
+    install_base_appimage_package
+}
+
+# ---------------------------------------------------------------------------- #
+#                                 PACKAGES AREA                                #
+# ---------------------------------------------------------------------------- #
 function install_apt {
     log "\nAdd Multiverse and Universe Respositories"
     evaladvanced "sudo add-apt-repository universe -y"
@@ -29,16 +37,6 @@ function install_apt {
 
     log "\nUpgrade APT Package"
     evaladvanced "sudo apt upgrade -y"
-    install_base_apt_package
-}
-function install_base_apt_package {
-    local package_list=(software-properties-common apt-transport-https wget curl inkscape git)
-    for package_name in "${package_list[@]}"; do
-        if [ $(commandexists "$package_name") == false ]; then
-            log "\nInstall $package_name"
-            evaladvanced "sudo apt install $package_name -y"
-        fi
-	done
 }
 
 function install_flatpak {
@@ -56,15 +54,6 @@ function install_snap {
     fi
 }
 
-function install_deb_get {
-    # Info Link: https://github.com/wimpysworld/deb-get
-    if [ $(commandexists "deb-get") == false ]; then
-        log "\nInstall Deb-Get"
-        install_base_apt_package
-        evaladvanced "curl -sL https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | sudo -E bash -s install deb-get"
-    fi
-}
-
 function install_pacstall {
     if [ $(commandexists "pacstall") == false ]; then
         log "\nInstall Pacstall"
@@ -77,15 +66,6 @@ function install_pacstall {
 function install_appimage {
     log "\nEnable AppImage Support in Ubuntu"
     evaladvanced "sudo apt install libfuse2 -y"
-    install_base_appimage_package
-}
-function install_base_appimage_package {
-    if [ ! -f "$OTHER_APPS_DIR/mdview.AppImage" ]; then
-        log "\nInstall Markdown Viewer"
-        download --url "https://github.com/c3er/mdview/releases/download/v2.7.0/mdview-2.7.0-x86_64.AppImage" --file "$OTHER_APPS_DIR/mdview.AppImage"
-        chmod +x "$OTHER_APPS_DIR/mdview.AppImage"
-        create_shortcut_file --name "Markdown Viewer" --exec "$OTHER_APPS_DIR/mdview.AppImage"
-    fi
 }
 
 function install_installers {
@@ -96,5 +76,34 @@ function install_installers {
     if [ $(commandexists "alien") == false ]; then
         log "\nInstall Alien(RPM Installer)"
         evaladvanced "sudo apt install alien -y"
+    fi
+}
+
+# ---------------------------------------------------------------------------- #
+#                              BASE PACKAGES AREA                              #
+# ---------------------------------------------------------------------------- #
+function install_base_apt_package {
+    local package_list=(software-properties-common apt-transport-https wget curl inkscape git)
+    for package_name in "${package_list[@]}"; do
+        if [ $(commandexists "$package_name") == false ]; then
+            log "\nInstall $package_name"
+            evaladvanced "sudo apt install $package_name -y"
+        fi
+    done
+}
+
+function install_base_appimage_package {
+    if [ ! -f "$OTHER_APPS_DIR/mdview.AppImage" ]; then
+        local commandMd="/usr/bin/mdview"
+        log "\nInstall Markdown Viewer"
+        download --url "https://github.com/c3er/mdview/releases/download/v2.7.0/mdview-2.7.0-x86_64.AppImage" --file "$OTHER_APPS_DIR/mdview.AppImage"
+        chmod +x "$OTHER_APPS_DIR/mdview.AppImage"
+	    sudo rm -rf "$commandMd"
+	    sudo tee "$commandMd" >/dev/null<<EOF
+#!/bin/bash
+eval "$OTHER_APPS_DIR/mdview.AppImage --no-sandbox \$@"
+EOF
+        sudo chmod +x "$commandMd"
+        create_shortcut_file --name "Markdown Viewer" --exec "$OTHER_APPS_DIR/mdview.AppImage"
     fi
 }

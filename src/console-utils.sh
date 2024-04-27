@@ -28,3 +28,22 @@ function wait_for_any_key_pressed {
     read -n 1 -s -r -p "$message"
     log ""
 }
+
+function confirm {
+    local status=false
+    local message="$1"
+    local isYesDefault="$2"
+    if [[ "${isYesDefault}" == "true" ]]; then
+        message="${message}? [Y/n]"
+    else
+        message="${message}? [y/N]"
+    fi
+
+    local res=$(read_user_keyboard "$message")
+    if [[ "$isYesDefault" == "true" ]] && [[ -z "${res}" ]]; then
+        status="true"
+    elif [[ "${res}" == "y" ]] || [[ "${res}" == "Y" ]]; then
+        status="true"
+    fi
+    echo $status
+}

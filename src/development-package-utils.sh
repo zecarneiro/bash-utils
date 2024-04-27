@@ -34,7 +34,7 @@ function install_python {
         evaladvanced "sudo apt install python3 -y"
         evaladvanced "sudo apt install python3-pip -y"
         evaladvanced "sudo apt install python3-venv -y"
-        evaladvanced "python3 -m venv .venv/anynamehere"
+        evaladvanced "python3 -m venv $HOME/.venv/anynamehere"
         evaladvanced "sudo apt install pipx -y"
         evaladvanced "pipx ensurepath"
         evaladvanced "sudo apt install python-is-python3 -y"
@@ -42,9 +42,16 @@ function install_python {
 }
 
 function install_java {
-    if [[ $(show_message_dev "Java") == "y" ]]; then
+    local whenAskedMsg="When asked for path of java"
+    if [[ $(show_message_dev "Java JDK 17") == "y" ]]; then
+        evaladvanced "sudo apt install openjdk-17-jdk -y"
+        headerlog "$whenAskedMsg"
+        headerlog "Insert: /usr/lib/jvm/java-17-openjdk-amd64"
+        changedefaultjdk
+    fi
+    if [[ $(show_message_dev "Java JDK 11") == "y" ]]; then
         evaladvanced "sudo apt install openjdk-11-jdk -y"
-        headerlog "When asked for path of java"
+        headerlog "$whenAskedMsg"
         headerlog "Insert: /usr/lib/jvm/java-11-openjdk-amd64"
         changedefaultjdk
     fi
@@ -70,7 +77,6 @@ function install_php {
 
 function install_go {
     if [[ $(show_message_dev "Go") == "y" ]]; then
-        evaladvanced "sudo add-apt-repository ppa:longsleep/golang-backports -y"
         evaladvanced "sudo apt install golang-go -y"
     fi
 }

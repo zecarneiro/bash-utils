@@ -131,3 +131,19 @@ function changedefaultjdk {
     evaladvanced "echo \"export PATH=\\$PATH:\\${JAVA_HOME_DEFAULT}/bin\" | sudo tee -a ${java_default_script_name}"
     evaladvanced "source ${java_default_script_name}"
 }
+
+function exitwithmsg {
+    local message="$1"
+    local code=$2
+    if [[ "--help" == "${message}" ]]||[[ "-h" == "${message}" ]]; then
+        log "exitwithmsg MSG CODE(Default = 0)"
+        return
+    fi
+    if [[ -n "${message}" ]]; then
+        infolog "$message"
+    fi
+    if [[ -z "${code}" ]]; then
+        code=0
+    fi
+    exit $code
+}

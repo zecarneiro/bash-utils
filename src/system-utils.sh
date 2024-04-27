@@ -33,12 +33,13 @@ function del_boot_application {
 }
 
 function create_profile_file {
-    local profileBashCustom="bash-profile-custom.sh"
+    local profilesShellDir="${OTHER_APPS_DIR}/profile-shell"
     local bashrc="$HOME/.bashrc"
-    cp "$SCRIPT_UTILS_DIR/others/bash-profile/$profileBashCustom" "$HOME/.$profileBashCustom"
-    if [[ $(cat "$bashrc" | grep -c "$profileBashCustom") -le 0 ]]; then
-        echo ". \"$HOME/.$profileBashCustom\"" | tee -a "$bashrc" >/dev/null
+    cp -r "$SCRIPT_UTILS_DIR/others/profile-shell" "$profilesShellDir"
+    if [[ $(cat "$bashrc" | grep -c "$profilesShellDir") -le 0 ]]; then
+        echo "for profileShellFile in \"$profilesShellDir\"/*.sh; do source \"\$profileShellFile\"; done" | tee -a "$bashrc" >/dev/null
     fi
+    infolog "Please, Restart the Terminal to change take effect!"
 }
 
 function set_binaries_on_system {
