@@ -30,3 +30,10 @@ function gitreporestorebackup {
 	git push --mirror "$url"
 }
 alias gitundolastcommit="evaladvanced 'git reset --soft HEAD~1'"
+function gitmovsubmodule {
+    local old="$1"
+    local new="$2"
+    local newParentDir="$(dirname "$new")"
+    mkdir -p "$newParentDir"
+    git mv "$old" "$new"
+}

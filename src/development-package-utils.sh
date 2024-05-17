@@ -78,6 +78,8 @@ function install_php {
 function install_go {
     if [[ $(show_message_dev "Go") == "y" ]]; then
         evaladvanced "sudo apt install golang-go -y"
+        reloadprofile
+        evaladvanced "go install golang.org/x/tools/gopls@latest"
     fi
 }
 
@@ -91,9 +93,10 @@ function install_sqlite3 {
 
 function install_postgres_sql {
     if [[ $(show_message_dev "Postgres SQL") == "y" ]]; then
-        evaladvanced "sudo apt install software-properties-common apt-transport-https wget -y"
-        evaladvanced "sudo wget -O- https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/keyrings/postgresql.gpg > /dev/null"
-        evaladvanced "echo \"deb [arch=amd64,arm64,ppc64el signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main\" | sudo tee /etc/apt/sources.list.d/postgresql.list > /dev/null"
+        evaladvanced "sudo apt install curl ca-certificates -y"
+        evaladvanced "sudo install -d /usr/share/postgresql-common/pgdg"
+        evaladvanced "sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+        evaladvanced "echo \"deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main\" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null"
         evaladvanced "sudo apt update"
         if [[ $(show_message_dev "Postgres SQL - Server") == "y" ]]; then
             evaladvanced "sudo apt install postgresql -y"

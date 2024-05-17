@@ -147,3 +147,5 @@ function exitwithmsg {
     fi
     exit $code
 }
+alias now='date'
+alias lhiden='ls -d .* --color=auto'

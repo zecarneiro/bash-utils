@@ -54,3 +54,13 @@ alias editcustomprofile='nano ~/.bash-profile-custom.sh'
 alias reloadprofile='source ~/.bashrc'
 alias ver='lsb_release -a'
 alias cls='clear'
+alias trash='mv --force -t ~/.local/share/Trash/files '
+function resetuseraccount() {
+    local $username="$1"
+    if [[ -n "${username}" ]]; then
+        echo ">>> sudo rm -rf \"/home/${username}\""
+        sudo rm -rf "/home/${username}"
+        echo ">>> sudo mkhomedir_helper \"$username\""
+        sudo mkhomedir_helper "$username"
+    fi
+}

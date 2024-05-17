@@ -2,7 +2,7 @@
 # Author: José M. C. Noronha
 
 function gouserotherapps {
-    local directory="$HOME\otherapps"
+    local directory="$HOME\.otherapps"
     if [[ $(directoryexists "$directory") == true ]]; then
         mkdir -p "$directory"
     fi
