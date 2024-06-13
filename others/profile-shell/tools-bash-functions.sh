@@ -149,3 +149,30 @@ function exitwithmsg {
 }
 alias now='date'
 alias lhiden='ls -d .* --color=auto'
+function runlineascommand {
+    local file="$1"
+    local headerKey="$2"
+	local prefix_sufix_key="######"
+	local allKey="$prefix_sufix_key ALL $prefix_sufix_key"
+	local headerKey="$prefix_sufix_key $headerKey $prefix_sufix_key"
+	local canRun=false
+    while read line; do
+        if [[ "${line}" == "${prefix_sufix_key}"* ]]; then
+            if [[ "${line}" == "${allKey}"* ]]||[[ "${line}" == "${headerKey}"* ]]; then
+                canRun=true
+            else
+                canRun=false
+            fi
+        fi
+        if [[ -n "${string}" ]]; then
+            echo "string is not empty"
+        fi
+        if [[ "${canRun}" == "true" ]]&&[[ -n "${line}" ]]; then
+            if [[ "${line}" == "${prefix_sufix_key}"* ]]; then
+                echo "$line"
+            else
+                evaladvanced "$line"
+            fi
+        fi
+    done <"$file"
+}
