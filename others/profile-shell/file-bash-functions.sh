@@ -51,7 +51,7 @@ function delfilelines {
 function deletefile {
     local file="$1"
     if [[ $(fileexists "$file") == true ]]; then
-        rm -rf "$file"
+        evaladvanced "rm -rf \"$file\""
     fi
 }
 alias countfiles="find . -type f | wc -l"
