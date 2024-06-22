@@ -176,3 +176,9 @@ function runlineascommand {
         fi
     done <"$file"
 }
+
+function pause {
+    echo -n "Press [ENTER] to continue...: "
+    read var_name
+}
+

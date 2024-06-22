@@ -6,7 +6,6 @@
 
 # Get Script directory
 declare SCRIPT_UTILS_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-echo $SCRIPT_UTILS_DIR
 
 # ---------------------------------------------------------------------------- #
 #                                    IMPORTS                                   #
