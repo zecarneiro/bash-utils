@@ -30,9 +30,9 @@ function writefile {
         return
     fi
     if [[ ! -f "$file" ]]||[[ $append == false ]]; then
-        echo "$content" | tee "$file" >/dev/null
+        echo -e "$content" | tee "$file" >/dev/null
     else
-        echo "$content" | tee -a "$file" >/dev/null
+        echo -e "$content" | tee -a "$file" >/dev/null
     fi
 }
 function delfilelines {
