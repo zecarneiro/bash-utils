@@ -80,6 +80,11 @@ function install_go {
         evaladvanced "sudo apt install golang-go -y"
         reloadprofile
         evaladvanced "go install golang.org/x/tools/gopls@latest"
+        addalias "goclean" "go clean -cache -modcache -testcache"
+        local bashrcFile="$HOME/.bashrc"
+        if [ "$(filecontain "$bashrcFile" "/go/bin:")" == false ]; then
+            writefile "$bashrcFile" "export PATH=\"\$HOME/go/bin:\$PATH\"" -append
+        fi
     fi
 }
 
