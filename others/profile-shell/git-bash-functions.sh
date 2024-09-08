@@ -37,3 +37,8 @@ function gitmovsubmodule {
     mkdir -p "$newParentDir"
     git mv "$old" "$new"
 }
+function gitaddscriptperm {
+    local script="$1"
+    git update-index --chmod=+x "$script"
+    git ls-files --stage | grep "$script"
+}

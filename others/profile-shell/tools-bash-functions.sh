@@ -181,4 +181,12 @@ function pause {
     echo -n "Press [ENTER] to continue...: "
     read var_name
 }
+function waituntil {
+    local seconds="$1"
+    if [[ -z "${seconds}" ]]; then
+        seconds=0
+    fi
+    echo ""
+    read -t $seconds -n 1 -s -r -p "Waiting for ${seconds} seconds, press any key to continue ..."; echo " "
+}
 
