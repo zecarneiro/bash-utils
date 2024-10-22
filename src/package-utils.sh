@@ -83,7 +83,7 @@ function install_installers {
 #                              BASE PACKAGES AREA                              #
 # ---------------------------------------------------------------------------- #
 function install_base_apt_package {
-    local package_list=(software-properties-common apt-transport-https wget curl inkscape git)
+    local package_list=(software-properties-common apt-transport-https wget curl inkscape git zenity libnotify-bin)
     for package_name in "${package_list[@]}"; do
         if [ $(commandexists "$package_name") == false ]; then
             log "\nInstall $package_name"

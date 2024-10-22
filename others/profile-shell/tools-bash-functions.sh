@@ -1,5 +1,6 @@
 #!/bin/bash
 # Author: José M. C. Noronha
+# shellcheck disable=SC2164
 
 function cutadvanced {
     local delimiter data direction # direction = L/R
@@ -45,6 +46,14 @@ function cutadvanced {
 }
 function extract {
     local file="$1"
+    local destination="$2"
+    
+    if [[ -z "${destination}" ]]; then
+        destination="$PWD"
+    fi
+    local currentDirectory="$destination"
+    mkdir "$destination"
+    cd "$destination"    
     if [ -f "$file" ] ; then
         case $file in
             *.tar.bz2)   tar xvjf "$file"    ;;
@@ -63,6 +72,7 @@ function extract {
     else
         errorlog "'$file' is not a valid file!"
     fi
+    cd "$currentDirectory"
 }
 function openurl {
     local url="$1"

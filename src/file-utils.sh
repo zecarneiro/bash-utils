@@ -10,7 +10,7 @@
 function svg_to_png {
     local svg_file="$1"
     local png_file="$2"
-    if fileexists "$svg_file"; then
+    if [[ "$(fileexists "$svg_file")" == "true" ]]; then
         local png_dir="$(dirname "$png_file")"
         mkdir -p "$png_dir"
         eval "inkscape \"$svg_file\" -o \"$png_file\" --export-overwrite -w 32 -h 32"
@@ -120,6 +120,13 @@ Categories=${categories};"
     fi
     sudo chmod +x "${shortcut_file}"
     echo "Created shortcut: ${shortcut_file}"
+}
+
+function del_shortcut_file {
+    local name="$1"
+    local shortcut_file_name="${name// /-}"
+    local shortcut_file="$HOME_DIR/.local/share/applications/${shortcut_file_name}.desktop"
+    deletefile "${shortcut_file}"
 }
 
 function view_markdown {

@@ -17,6 +17,7 @@ function install_development_package {
     install_go
     install_sqlite3
     install_postgres_sql
+    install_shell_check
 }
 
 function install_node_typescript_javascript {
@@ -80,7 +81,7 @@ function install_go {
         evaladvanced "sudo apt install golang-go -y"
         reloadprofile
         evaladvanced "go install golang.org/x/tools/gopls@latest"
-        addalias "goclean" "go clean -cache -modcache -testcache"
+        addalias "goclean" "go clean -cache -modcache -testcache -fuzzcache"
         local bashrcFile="$HOME/.bashrc"
         if [ "$(filecontain "$bashrcFile" "/go/bin:")" == false ]; then
             writefile "$bashrcFile" "export PATH=\"\$HOME/go/bin:\$PATH\"" -append
@@ -109,5 +110,11 @@ function install_postgres_sql {
         if [[ $(show_message_dev "Postgres SQL - Client") == "y" ]]; then
             evaladvanced "sudo apt install postgresql-client -y"
         fi
+    fi
+}
+
+function install_shell_check {
+    if [[ $(show_message_dev "Shellcheck") == "y" ]]; then
+        evaladvanced "sudo apt install shellcheck -y"
     fi
 }

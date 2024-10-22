@@ -37,3 +37,4 @@ function ldir {
     find "." -maxdepth 1 -type d -not -path "." # directories only
 }
 alias countdirs="find . -type d | wc -l"
+alias mkdir="mkdir -p"
