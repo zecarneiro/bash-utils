@@ -199,4 +199,9 @@ function waituntil {
     echo ""
     read -t $seconds -n 1 -s -r -p "Waiting for ${seconds} seconds, press any key to continue ..."; echo " "
 }
+function kill-port {
+    local port="$1"
+    sudo kill -9 $(sudo lsof -t -i :$port)
+}
+alias restart-pipewire="systemctl --user restart pipewire.service"
 
