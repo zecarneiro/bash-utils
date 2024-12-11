@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 # shellcheck disable=SC2164
 
@@ -47,13 +47,13 @@ function cutadvanced {
 function extract {
     local file="$1"
     local destination="$2"
-    
+
     if [[ -z "${destination}" ]]; then
         destination="$PWD"
     fi
     local currentDirectory="$destination"
     mkdir "$destination"
-    cd "$destination"    
+    cd "$destination"
     if [ -f "$file" ] ; then
         case $file in
             *.tar.bz2)   tar xvjf "$file"    ;;
@@ -90,14 +90,14 @@ function hasinternet {
 function mypubip {
     # Dumps a list of all IP addresses for every device
     # /sbin/ifconfig |grep -B1 "inet addr" |awk '{ if ( $1 == "inet" ) { print $2 } else if ( $2 == "Link" ) { printf "%s:" ,$1 } }' |awk -F: '{ print $1 ": " $3 }';
-    
+
     ### Old commands
     # Internal IP Lookup
     #echo -n "Internal IP: " ; /sbin/ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}'
-    
+
     # External IP Lookup
     #echo -n "External IP: " ; wget http://smart-ip.net/myip -O - -q
-    
+
     # Internal IP Lookup.
     if [ -e /sbin/ip ];
     then
@@ -105,7 +105,7 @@ function mypubip {
     else
         echo -n "Internal IP: " ; /sbin/ifconfig wlan0 | grep "inet " | awk -F: '{print $1} |' | awk '{print $2}'
     fi
-    
+
     # External IP Lookup
     echo -n "External IP: " ; curl -s ifconfig.me
 }
@@ -126,6 +126,7 @@ function download {
         if [ "$(commandexists "wget")" == false ]; then
             evaladvanced "sudo apt install wget -y"
         fi
+        infolog "Downloading from URL: $url"
         wget -O "$file" "$url" -q --show-progress
     fi
 }
@@ -204,4 +205,49 @@ function kill-port {
     sudo kill -9 $(sudo lsof -t -i :$port)
 }
 alias restart-pipewire="systemctl --user restart pipewire.service"
+alias nautilus-kill="nautilus -q"
+function nautilus-install-script-context-menu {
+    local scriptName="$1"; shift
+    local scriptCommands=( "$@" )
+    local scriptsPath="$HOME/.local/share/nautilus/scripts"
+    local scriptInstall="${scriptsPath}/${scriptName}"
+    evaladvanced "mkdir -p '$scriptsPath'"
+    nautilus-uninstall-script-context-menu "$scriptName"
 
+    echo "##!/usr/bin/env bash" > "$scriptInstall"
+    for scriptCommand in "${scriptCommands}"; do
+        infolog "Insert into $scriptName the command: $scriptCommand"
+        echo "$scriptCommand" | tee -a "$scriptInstall" >/dev/null
+    done
+    evaladvanced "chmod +x '$scriptInstall'"
+    nautilus-kill
+}
+function nautilus-uninstall-script-context-menu {
+    local scriptName="$1"
+    local scriptsPath="~/.local/share/nautilus/scripts/$scriptName"
+    local scriptInstall="${scriptsPath}/$(basename "$script")"
+    if [[ -f "$scriptsPath" ]]; then
+        evaladvanced "rm -rf '$scriptsPath'"
+        nautilus-kill
+    fi
+}
+function add-shortcut-keybind {
+    local name="$1"
+    local command="$2"
+    local shortcut="$3" # Example: <Primary><Alt>g
+    local existedCustom=$(gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings | sed 's/@as //g')
+    local existedCustomCount=$(echo "$existedCustom" | grep -c ",")
+    if [ $existedCustomCount -eq 0 ]&&[ "$existedCustom" != "[]" ]; then
+        existedCustomCount="1"
+    fi
+    infolog "Custom keybindings results: $existedCustom"
+    local nextCustomKeybind="custom${existedCustomCount}"
+
+    # Set Shortcut keybind
+    infolog "Set shortcut: $shortcut"
+    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/${nextCustomKeybind}/binding "'$shortcut'"
+    infolog "Set command: $command"
+    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/${nextCustomKeybind}/command "'$command'"
+    infolog "Set name: $name"
+    dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/${nextCustomKeybind}/name "'$name'"
+}

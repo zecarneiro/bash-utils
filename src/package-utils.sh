@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 # shellcheck disable=SC2155
 # shellcheck disable=SC2164
@@ -93,17 +93,8 @@ function install_base_apt_package {
 }
 
 function install_base_appimage_package {
-    if [ ! -f "$OTHER_APPS_DIR/mdview.AppImage" ]; then
-        local commandMd="/usr/bin/mdview"
-        log "\nInstall Markdown Viewer"
-        download --url "https://github.com/c3er/mdview/releases/download/v2.7.0/mdview-2.7.0-x86_64.AppImage" --file "$OTHER_APPS_DIR/mdview.AppImage"
-        chmod +x "$OTHER_APPS_DIR/mdview.AppImage"
-	    sudo rm -rf "$commandMd"
-	    sudo tee "$commandMd" >/dev/null<<EOF
-#!/bin/bash
-eval "$OTHER_APPS_DIR/mdview.AppImage --no-sandbox \$@"
-EOF
-        sudo chmod +x "$commandMd"
-        create_shortcut_file --name "Markdown Viewer" --exec "$OTHER_APPS_DIR/mdview.AppImage"
+    if [ $(commandexists "ghostwriter") == false ]; then
+        log "\nInstall Ghostwriter - https://invent.kde.org/office/ghostwriter"
+        evaladvanced "sudo apt install ghostwriter -y"
     fi
 }

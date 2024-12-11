@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 
 declare NO_COLOR='\033[0m'

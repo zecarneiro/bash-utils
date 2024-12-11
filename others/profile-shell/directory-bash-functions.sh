@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 
 function gouserotherapps {
@@ -38,3 +38,6 @@ function ldir {
 }
 alias countdirs="find . -type d | wc -l"
 alias mkdir="mkdir -p"
+function tempdir {
+    echo "/tmp"
+}

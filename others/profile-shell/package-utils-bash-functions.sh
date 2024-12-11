@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 
 # ---------------------------------------------------------------------------- #
@@ -105,9 +105,46 @@ function snaplist {
     evaladvanced "${command_to_run}"
 }
 
+# ---------------------------------------------------------------------------- #
+#                               UPDATERS SCRIPTS                               #
+# ---------------------------------------------------------------------------- #
+function installupdater {
+    # shellcheck disable=SC2116
+    # shellcheck disable=SC2155
+    local updater_dir="$(echo "$HOME")/.otherapps/updaters"
+    local updater_script="$1"
+    # shellcheck disable=SC2155
+    local scriptname=$(basename "$updater_script")
+    mkdir -p "$updater_dir"
+    infolog "Installing '$scriptname'"
+    cp "$updater_script" "$updater_dir"
+    chmod -R 777 "$updater_dir"
+    oklog "Done"
+}
+
+function updatersupgrade {
+    local scriptname="$1"
+    local currentdir="$PWD"
+    # shellcheck disable=SC2116
+    # shellcheck disable=SC2155
+    local updater_dir="$(echo "$HOME")/.otherapps/updaters"
+    if [ -d "$updater_dir" ]; then
+        for script in "$updater_dir"/*; do
+            # shellcheck disable=SC2155
+            local updatername=$(basename "$script")   
+            if [[ -z "${scriptname}" ]]||[[ "${scriptname}" == "${updatername}" ]]; then
+                promptlog "$script"
+                # shellcheck disable=SC1090
+                . "$script"
+            fi
+        done
+    fi
+    # shellcheck disable=SC2164
+    cd "$currentdir"
+}
 
 # ---------------------------------------------------------------------------- #
 #                                SYSTEM PACKAGES                               #
 # ---------------------------------------------------------------------------- #
-alias systemupgrade="npmupgrade; log; aptupgrade; log; flatpakupgrade; log; snapupgrade; log; debgetupgrade"
+alias systemupgrade="npmupgrade; log; aptupgrade; log; flatpakupgrade; log; snapupgrade; log; debgetupgrade; updatersupgrade"
 alias systemclean="aptclean; log; flatpakclean; log; snapclean; log; debgetclean"

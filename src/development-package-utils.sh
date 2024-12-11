@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 # shellcheck disable=SC2155
 
@@ -18,6 +18,7 @@ function install_development_package {
     install_sqlite3
     install_postgres_sql
     install_shell_check
+    install_bash_language_server
 }
 
 function install_node_typescript_javascript {
@@ -43,17 +44,10 @@ function install_python {
 }
 
 function install_java {
-    local whenAskedMsg="When asked for path of java"
-    if [[ $(show_message_dev "Java JDK 17") == "y" ]]; then
-        evaladvanced "sudo apt install openjdk-17-jdk -y"
-        headerlog "$whenAskedMsg"
-        headerlog "Insert: /usr/lib/jvm/java-17-openjdk-amd64"
-        changedefaultjdk
-    fi
-    if [[ $(show_message_dev "Java JDK 11") == "y" ]]; then
-        evaladvanced "sudo apt install openjdk-11-jdk -y"
-        headerlog "$whenAskedMsg"
-        headerlog "Insert: /usr/lib/jvm/java-11-openjdk-amd64"
+    if [[ $(show_message_dev "Java JDK 21") == "y" ]]; then
+        evaladvanced "sudo apt install openjdk-21-jdk -y"
+        headerlog "When asked for path of java"
+        headerlog "Insert: /usr/lib/jvm/java-21-openjdk-amd64"
         changedefaultjdk
     fi
 }
@@ -116,5 +110,11 @@ function install_postgres_sql {
 function install_shell_check {
     if [[ $(show_message_dev "Shellcheck") == "y" ]]; then
         evaladvanced "sudo apt install shellcheck -y"
+    fi
+}
+
+function install_bash_language_server {
+    if [[ $(show_message_dev "Bash language server") == "y" ]]; then
+        evaladvanced "npm install -g bash-language-server"
     fi
 }

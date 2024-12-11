@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 # Some code has source: https://github.com/ChrisTitusTech/mybash
 
@@ -41,20 +41,16 @@ function addalias {
     delfilelines "$bash_alias" "^alias $name="
     echo "alias $name=\"$command\"" | tee -a "${bash_alias}" > /dev/null
 }
-function isadmin {
-    if [ "$(id -u)" -eq 0 ]; then
-        echo true
-    else
-        echo false
-    fi
-}
 alias editalias='nano ~/.bash_aliases'
 alias editprofile='nano ~/.bashrc'
 alias editcustomprofile='nano ~/.bash-profile-custom.sh'
 alias reloadprofile='source ~/.bashrc'
 alias ver='lsb_release -a'
-alias cls='clear'
 alias trash='mv --force -t ~/.local/share/Trash/files '
+
+
+alias cls='clear'
+
 function resetuseraccount {
     local $username="$1"
     if [[ -n "${username}" ]]; then
@@ -88,3 +84,4 @@ function deleteservice {
         sudo rm -rf "$name"
     fi
 }
+alias update-menu-entries="sudo update-desktop-database"

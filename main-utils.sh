@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 # shellcheck source=/dev/null
 # shellcheck disable=SC2155
@@ -20,7 +20,7 @@ done
 # ---------------------------------------------------------------------------- #
 #                                   VARIABLE                                   #
 # ---------------------------------------------------------------------------- #
-declare TEMP_DIR=$(mktemp -d)
+declare TEMP_DIR="$(tempdir)/bash-utils"
 declare HOME_DIR="$(echo "$HOME")"
 declare OTHER_APPS_DIR="$HOME_DIR/.otherapps"
 declare CONFIG_DIR="$HOME_DIR/.config"

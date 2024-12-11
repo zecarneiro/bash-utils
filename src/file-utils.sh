@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 # shellcheck disable=SC2155
 # shellcheck disable=SC2164
@@ -127,9 +127,4 @@ function del_shortcut_file {
     local shortcut_file_name="${name// /-}"
     local shortcut_file="$HOME_DIR/.local/share/applications/${shortcut_file_name}.desktop"
     deletefile "${shortcut_file}"
-}
-
-function view_markdown {
-    local file="${1}"
-    "$OTHER_APPS_DIR/mdview.AppImage" "$file"
 }

@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 
 function fileexists {
@@ -69,5 +69,26 @@ function filecontain {
         echo true
     else
         echo false
+    fi
+}
+function openmarkdown {
+    local file="${1}"
+    if [[ $(fileexists "$file") == true ]]; then
+        if [ "$(commandexists "ghostwriter")" == true ]; then
+            ghostwriter "$file" &
+        else
+            cat "$file"
+        fi
+    fi
+}
+
+function openimage {
+    local file="${1}"
+    if [[ $(fileexists "$file") == true ]]; then
+        if [ "$(commandexists "eog")" == true ]; then
+            eog "$file" &
+        else
+            errorlog "Can not open given image. Command not found: eog"
+        fi
     fi
 }

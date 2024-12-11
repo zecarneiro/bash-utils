@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/usr/bin/env bash
 # Author: José M. C. Noronha
 
 function gitresethardorigin {
@@ -58,14 +58,25 @@ function githubchangeurl() {
     infolog "Set new github URL: $url"
     git remote set-url origin "$url"
 }
-function gitglobalconfig() {
-    evaladvanced "git config --global core.autocrlf input"
-    evaladvanced "git config --global core.fileMode false"
-    evaladvanced "git config --global core.logAllRefUpdates true"
-    evaladvanced "git config --global core.ignorecase true"
-    evaladvanced "git config --global pull.rebase true"
-    evaladvanced "git config --global --add safe.directory '*'"
-    evaladvanced "git config --global merge.ff false"
+function gitsetconfig() {
+    local -a configArr=(
+        "core.autocrlf input"
+        "core.fileMode false"
+        "core.logAllRefUpdates true"
+        "core.ignorecase true"
+        "pull.rebase true"
+        "--add safe.directory '*'"
+        "merge.ff false"
+    )
+    for configCmd in "${configArr[@]}"; do
+        evaladvanced "git config --global $configCmd"
+    done
+    if [ $(directoryexists "$PWD/.git") = "true" ]||[ $(fileexists "$PWD/.git") = "true" ]; then
+        infolog "Set local configurations"
+        for configCmd in "${configArr[@]}"; do
+            evaladvanced "git config $configCmd"
+        done
+    fi
 }
 function gitconfiguser() {
     read -p "Username: " username
@@ -79,7 +90,19 @@ alias gitstatus="git status"
 function gitlatestversionrepo() {
     local owner="$1"
     local repo="$2"
-    local url="https://api.github.com/repos/$owner/$repo/releases"
-    local version=$(curl -s "$url" | grep -Po '"tag_name": "v\K[^"]*' | head -n 1)
+    local isrelease=$3
+    local urlsufix="/latest"
+    if [[ -n "${isrelease}" ]]||[[ "${isrelease}" == "true" ]]; then
+        urlsufix=""
+    fi
+    local url="https://api.github.com/repos/$owner/$repo/releases${urlsufix}"
+    infolog "Get latest version from GitHub API at ${url}"
+    local version=$(curl -s "$url" | grep -Po '"tag_name": "\K[^"]*' | head -n 1)
+    if [[ -z "${version}" ]]; then
+        version=$(curl -s "$url" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | head -n 1)
+    fi
+    if [[ "$version" == "v*" ]]; then
+        version=$(echo "$version" | grep -Po 'v\K.*')
+    fi
     echo "$version"
 }
