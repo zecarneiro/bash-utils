@@ -79,7 +79,16 @@ alias gitstatus="git status"
 function gitlatestversionrepo() {
     local owner="$1"
     local repo="$2"
-    local url="https://api.github.com/repos/$owner/$repo/releases"
+    local isrelease=$3
+    local urlsufix="/latest"
+    if [[ -n "${isrelease}" ]]||[[ "${isrelease}" == "true" ]]; then
+        urlsufix=""
+    fi
+    local url="https://api.github.com/repos/$owner/$repo/releases${urlsufix}"
+    infolog "Get latest version from GitHub API at ${url}"
     local version=$(curl -s "$url" | grep -Po '"tag_name": "v\K[^"]*' | head -n 1)
+    if [[ -z "${version}" ]]; then
+        version=$(curl -s "$url" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | head -n 1)
+    fi
     echo "$version"
 }
