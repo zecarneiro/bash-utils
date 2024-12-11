@@ -88,3 +88,22 @@ function deleteservice {
         sudo rm -rf "$name"
     fi
 }
+alias update-menu-entries="sudo update-desktop-database"
+
+# Add new functions before this line
+build_prompt() {
+    EXIT=$?               # save exit code of last command
+    red='\[\e[0;31m\]'    # colors
+    green='\[\e[0;32m\]'
+    cyan='\[\e[1;36m\]'
+    reset='\[\e[0m\]'
+    PS1='${debian_chroot:+($debian_chroot)}'  # begin prompt
+
+    if [ $EXIT != 0 ]; then  # add arrow color dependent on exit code
+        PS1+="$red"
+    else
+        PS1+="$green"
+    fi
+    PS1+="→$reset  $cyan\w$reset \\$ " # construct rest of prompt
+}
+PROMPT_COMMAND=build_prompt

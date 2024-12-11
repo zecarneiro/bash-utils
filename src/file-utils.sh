@@ -131,5 +131,5 @@ function del_shortcut_file {
 
 function view_markdown {
     local file="${1}"
-    "$OTHER_APPS_DIR/mdview.AppImage" "$file"
+    ghostwriter "$file"
 }
