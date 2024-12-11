@@ -126,6 +126,7 @@ function download {
         if [ "$(commandexists "wget")" == false ]; then
             evaladvanced "sudo apt install wget -y"
         fi
+        infolog "Downloading from URL: $url"
         wget -O "$file" "$url" -q --show-progress
     fi
 }
@@ -204,4 +205,29 @@ function kill-port {
     sudo kill -9 $(sudo lsof -t -i :$port)
 }
 alias restart-pipewire="systemctl --user restart pipewire.service"
+alias nautilus-kill="nautilus -q"
+function nautilus-install-script-context-menu {
+    local scriptName="$1"; shift
+    local scriptCommands=( "$@" )
+    local scriptsPath="$HOME/.local/share/nautilus/scripts"
+    local scriptInstall="${scriptsPath}/${scriptName}"
+    evaladvanced "mkdir -p '$scriptsPath'"
+    nautilus-uninstall-script-context-menu "$scriptName"
 
+    echo "#!/bin/bash" > "$scriptInstall"
+    for scriptCommand in "${scriptCommands}"; do
+        infolog "Insert into $scriptName the command: $scriptCommand"
+        echo "$scriptCommand" | tee -a "$scriptInstall" >/dev/null
+    done
+    evaladvanced "chmod +x '$scriptInstall'"
+    nautilus-kill
+}
+function nautilus-uninstall-script-context-menu {
+    local scriptName="$1"
+    local scriptsPath="~/.local/share/nautilus/scripts/$scriptName"
+    local scriptInstall="${scriptsPath}/$(basename "$script")"
+    if [[ -f "$scriptsPath" ]]; then
+        evaladvanced "rm -rf '$scriptsPath'"
+        nautilus-kill
+    fi
+}
