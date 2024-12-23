@@ -126,6 +126,7 @@ function download {
         if [ "$(commandexists "wget")" == false ]; then
             evaladvanced "sudo apt install wget -y"
         fi
+        infolog "Downloading from URL: $url"
         wget -O "$file" "$url" -q --show-progress
     fi
 }
