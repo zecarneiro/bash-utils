@@ -1,4 +1,4 @@
-##!/usr/bin/env bash
+#!/usr/bin/env bash
 # Author: José M. C. Noronha
 # shellcheck disable=SC2155
 # shellcheck disable=SC2164

@@ -1,4 +1,4 @@
-##!/usr/bin/env bash
+#!/usr/bin/env bash
 # Author: José M. C. Noronha
 # Some code has source: https://github.com/ChrisTitusTech/mybash
 

@@ -1,4 +1,4 @@
-##!/usr/bin/env bash
+#!/usr/bin/env bash
 # Author: José M. C. Noronha
 
 alias zenity="zenity 2>/dev/null"

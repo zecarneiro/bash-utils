@@ -1,4 +1,4 @@
-##!/usr/bin/env bash
+#!/usr/bin/env bash
 # Author: José M. C. Noronha
 # shellcheck disable=SC2164
 
@@ -214,7 +214,7 @@ function nautilus-install-script-context-menu {
     evaladvanced "mkdir -p '$scriptsPath'"
     nautilus-uninstall-script-context-menu "$scriptName"
 
-    echo "##!/usr/bin/env bash" > "$scriptInstall"
+    echo "#!/usr/bin/env bash" > "$scriptInstall"
     for scriptCommand in "${scriptCommands}"; do
         infolog "Insert into $scriptName the command: $scriptCommand"
         echo "$scriptCommand" | tee -a "$scriptInstall" >/dev/null
@@ -250,4 +250,12 @@ function add-shortcut-keybind {
     dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/${nextCustomKeybind}/command "'$command'"
     infolog "Set name: $name"
     dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/${nextCustomKeybind}/name "'$name'"
+}
+function dos2unixrec {
+    local ext="$1"
+    find . -type f -name "*.${ext}" -print0 | xargs -0 dos2unix
+}
+function unix2dosrec {
+    local ext="$1"
+    find . -type f -name "*.${ext}" -print0 | xargs -0 unix2dos
 }
