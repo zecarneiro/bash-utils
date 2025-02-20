@@ -93,8 +93,5 @@ function install_base_apt_package {
 }
 
 function install_base_appimage_package {
-    if [ $(commandexists "ghostwriter") == false ]; then
-        log "\nInstall Ghostwriter - https://invent.kde.org/office/ghostwriter"
-        evaladvanced "sudo apt install ghostwriter -y"
-    fi
+    infolog "Base Appimage package is empty"
 }
