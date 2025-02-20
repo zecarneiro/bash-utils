@@ -10,9 +10,6 @@ declare SCRIPT_UTILS_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/nul
 # ---------------------------------------------------------------------------- #
 #                                    IMPORTS                                   #
 # ---------------------------------------------------------------------------- #
-for script in "${SCRIPT_UTILS_DIR}"/others/profile-shell/*.sh; do
-    source "$script"
-done
 for script in "${SCRIPT_UTILS_DIR}"/src/*.sh; do
     source "$script"
 done
@@ -22,8 +19,6 @@ done
 # ---------------------------------------------------------------------------- #
 declare TEMP_DIR="$(tempdir)/bash-utils"
 declare HOME_DIR="$(echo "$HOME")"
-declare OTHER_APPS_DIR="$HOME_DIR/.otherapps"
-declare CONFIG_DIR="$HOME_DIR/.config"
 declare APPS_DIR="${TEMP_DIR}/apps"
 declare APPS_BIN_DIR="$APPS_DIR/bin"
 
