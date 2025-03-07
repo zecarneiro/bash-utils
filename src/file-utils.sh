@@ -7,16 +7,6 @@
 # ---------------------------------------------------------------------------- #
 #                                   FUNCTIONS                                  #
 # ---------------------------------------------------------------------------- #
-function svg_to_png {
-    local svg_file="$1"
-    local png_file="$2"
-    if [[ "$(fileexists "$svg_file")" == "true" ]]; then
-        local png_dir="$(dirname "$png_file")"
-        mkdir -p "$png_dir"
-        eval "inkscape \"$svg_file\" -o \"$png_file\" --export-overwrite -w 32 -h 32"
-    fi
-}
-
 function define_default_system_dir {
     local result=$(read_user_keyboard "Insert all User Dirs? (y/N)")
     if [[ "${result}" == "y" ]]; then
