@@ -66,6 +66,7 @@ function install_pacstall {
 function install_appimage {
     log "\nEnable AppImage Support in Ubuntu"
     evaladvanced "sudo apt install libfuse2 -y"
+    evaladvanced "sudo apt install libfuse2t64 -y"
 }
 
 function install_installers {
