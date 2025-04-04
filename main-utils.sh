@@ -17,7 +17,7 @@ done
 # ---------------------------------------------------------------------------- #
 #                                   VARIABLE                                   #
 # ---------------------------------------------------------------------------- #
-declare TEMP_DIR="$(tempdir)/bash-utils"
+declare TEMP_DIR="/tmp/bash-utils"
 declare HOME_DIR="$(echo "$HOME")"
 declare APPS_DIR="${TEMP_DIR}/apps"
 declare APPS_BIN_DIR="$APPS_DIR/bin"
@@ -34,8 +34,8 @@ function create_dirs {
         "$HOME_DIR/Templates"
         "$APPS_BIN_DIR"
     )
-    for dir in "${dirs[@]}"; do
-        if [[ ! -d "${dir}" ]]; then
+    for dir in "${dirs[@]}"; do        
+        if [[ -n "${dir}" ]]&&[[ ! -d "${dir}" ]]; then
             mkdir -p "${dir}"
         fi
     done

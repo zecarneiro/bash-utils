@@ -49,3 +49,17 @@ function set_binaries_on_system {
     eval "sudo cp \"$binary\" \"$destination\""
     eval "sudo chmod +x \"$destination\""
 }
+function get_system {
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        echo "linux"
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "osx"
+    elif [[ "$OSTYPE" == "cygwin" ]]||[[ "$OSTYPE" == "msys" ]]||[[ "$OSTYPE" == "win32" ]]; then
+        echo "windows"
+    elif [[ "$OSTYPE" == "freebsd"* ]]; then
+        echo "freebsd"
+    else
+        echo "Unknown"
+    fi
+
+}
