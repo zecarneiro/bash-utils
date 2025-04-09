@@ -32,16 +32,6 @@ function del_boot_application {
     fi
 }
 
-function create_profile_file {
-    local profilesShellDir="${OTHER_APPS_DIR}/profile-shell"
-    local bashrc="$HOME/.bashrc"
-    cp -r "$SCRIPT_UTILS_DIR/others/profile-shell" "$OTHER_APPS_DIR"
-    if [[ $(cat "$bashrc" | grep -c "$profilesShellDir") -le 0 ]]; then
-        echo "for profileShellFile in \"$profilesShellDir\"/*.sh; do source \"\$profileShellFile\"; done" | tee -a "$bashrc" >/dev/null
-    fi
-    infolog "Please, Restart the Terminal to change take effect!"
-}
-
 function set_binaries_on_system {
     local binary="$1"
     local binaryname=$(basename "$binary")
@@ -61,5 +51,4 @@ function get_system {
     else
         echo "Unknown"
     fi
-
 }

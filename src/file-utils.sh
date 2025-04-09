@@ -7,40 +7,6 @@
 # ---------------------------------------------------------------------------- #
 #                                   FUNCTIONS                                  #
 # ---------------------------------------------------------------------------- #
-function define_default_system_dir {
-    local result=$(read_user_keyboard "Insert all User Dirs? (y/N)")
-    if [[ "${result}" == "y" ]]; then
-        local -A user_dirs
-        result=$(read_user_keyboard_autocomplete "Insert DOWNLOAD (Or ENTER to cancel)")
-        if [ -d "$result" ]; then
-            user_dirs[DOWNLOAD]="$result"
-        fi
-        result=$(read_user_keyboard_autocomplete "Insert TEMPLATES (Or ENTER to cancel)")
-        if [ -d "$result" ]; then
-            user_dirs[TEMPLATES]="$result"
-        fi
-        result=$(read_user_keyboard_autocomplete "Insert DOCUMENTS (Or ENTER to cancel)")
-        if [ -d "$result" ]; then
-            user_dirs[DOCUMENTS]="$result"
-        fi
-        result=$(read_user_keyboard_autocomplete "Insert MUSIC (Or ENTER to cancel)")
-        if [ -d "$result" ]; then
-            user_dirs[MUSIC]="$result"
-        fi
-        result=$(read_user_keyboard_autocomplete "Insert PICTURES (Or ENTER to cancel)")
-        if [ -d "$result" ]; then
-            user_dirs[PICTURES]="$result"
-        fi
-        result=$(read_user_keyboard_autocomplete "Insert VIDEOS (Or ENTER to cancel)")
-        if [ -d "$result" ]; then
-            user_dirs[VIDEOS]="$result"
-        fi
-        for key in "${!user_dirs[@]}"; do
-            evaladvanced "xdg-user-dirs-update --set $key \"${user_dirs[$key]}\""
-        done
-    fi
-}
-
 function create_shortcut_file {
     local name=""
     local exec_cmd=""
