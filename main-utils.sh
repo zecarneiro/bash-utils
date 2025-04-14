@@ -15,24 +15,12 @@ for script in "${SCRIPT_UTILS_DIR}"/src/*.sh; do
 done
 
 # ---------------------------------------------------------------------------- #
-#                                   VARIABLE                                   #
-# ---------------------------------------------------------------------------- #
-declare TEMP_DIR="/tmp/bash-utils"
-declare HOME_DIR="$(echo "$HOME")"
-declare APPS_DIR="${TEMP_DIR}/apps"
-declare APPS_BIN_DIR="$APPS_DIR/bin"
-
-# ---------------------------------------------------------------------------- #
 #                                  OPERATIONS                                  #
 # ---------------------------------------------------------------------------- #
 function create_dirs {
     local dirs=(
-        "$OTHER_APPS_DIR"
-        "$CONFIG_DIR"
-        "$HOME_DIR/.config/autostart"
-        "$HOME_DIR/.local/share/applications"
-        "$HOME_DIR/Templates"
-        "$APPS_BIN_DIR"
+        "$HOME/.local/share/applications"
+        "$HOME/Templates"
     )
     for dir in "${dirs[@]}"; do        
         if [[ -n "${dir}" ]]&&[[ ! -d "${dir}" ]]; then

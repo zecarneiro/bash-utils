@@ -58,7 +58,7 @@ function create_shortcut_file {
         esac
     done
     local shortcut_file_name="${name// /-}"
-    local shortcut_file="$HOME_DIR/.local/share/applications/${shortcut_file_name}.desktop"
+    local shortcut_file="$HOME/.local/share/applications/${shortcut_file_name}.desktop"
     local data="[Desktop Entry]
 Version=1.0
 Name=${name}
@@ -81,6 +81,6 @@ Categories=${categories};"
 function del_shortcut_file {
     local name="$1"
     local shortcut_file_name="${name// /-}"
-    local shortcut_file="$HOME_DIR/.local/share/applications/${shortcut_file_name}.desktop"
+    local shortcut_file="$HOME/.local/share/applications/${shortcut_file_name}.desktop"
     deletefile "${shortcut_file}"
 }
